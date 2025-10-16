@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia rapida resolución de pensión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .guide-card {
+            transition: all 0.3s ease-in-out;
+        }
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0.5rem 0.5rem 1.75rem;
+            transition: all 0.2s ease-in-out;
+            color: #475569; /* slate-600 */
+            font-weight: 500;
+            border-radius: 0.375rem;
+        }
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 0;
+            width: 4px;
+            background-color: #fecb00; /* yellow */
+            border-radius: 2px;
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link:hover {
+            color: #1a3a69;
+            background-color: #f7fafc; /* gray-50 */
+        }
+        .nav-link.active {
+            color: #1a3a69;
+            font-weight: 600;
+        }
+        .nav-link.active::before {
+            height: 80%;
+        }
+        .tab-btn {
+            padding: 0.75rem 0.5rem;
+            font-weight: 600;
+            color: #64748b; /* slate-500 */
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease-in-out;
+        }
+        .tab-btn:hover {
+            color: #1a3a69;
+        }
+        .tab-btn.active-tab {
+            color: #1a3a69;
+            border-bottom-color: #fecb00;
+        }
+        .faq-question svg {
+            transition: transform 0.3s ease;
+        }
+        /* Styles for Image Zoom Modal */
+        .cursor-zoom-in {
+            cursor: zoom-in;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .modal-image {
+            max-width: none; /* Allow image to be larger than container for zoom */
+            max-height: none;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            cursor: grab;
+            transition: transform 0.2s ease-out;
+            transform-origin: center center;
+        }
+        .modal-image.dragging {
+            cursor: grabbing;
+            transition: none; /* Disable transition while dragging for smoothness */
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            z-index: 1001;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8">
+
+        <!-- Header -->
+        <header class="mb-16">
+            <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4">
+                <img src="afore 2.png" alt="Logo Afore Coppel" class="h-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-[#1a3a69] text-center sm:text-left leading-tight">Guía Rápida de Resolución de Pensión</h1>
+            </div>
+        </header>
+
+        <!-- Main content with two columns -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
+
+            <!-- Left Column: Index -->
+            <aside class="md:col-span-1">
+                <nav class="sticky top-8">
+                    <h3 class="text-sm font-bold text-left text-slate-500 uppercase tracking-wider mb-4">Secciones</h3>
+                    <ul class="flex flex-col space-y-1">
+                        <li><a href="#amparo73" class="nav-link">Amparo 73</a></li>
+                        <li><a href="#negativa73" class="nav-link">Negativa 73</a></li>
+                        <li><a href="#garantizada97" class="nav-link">P. Garantizada 97</a></li>
+                        <li><a href="#renta97" class="nav-link">Renta Vitalicia 97</a></li>
+                        <li><a href="#negativa97" class="nav-link">Negativa 97</a></li>
+                        <li><a href="#rjp" class="nav-link">RJP</a></li>
+                        <li><a href="#faq" class="nav-link">Preguntas Frecuentes</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Right Column: Vertical Guide -->
+            <main class="md:col-span-3">
+                <div class="space-y-12">
+                    
+                    <!-- Item 1: Amparo de pensión 73 -->
+                    <div id="amparo73" class="guide-item flex items-start gap-x-6">
+                        <div class="flex-shrink-0 w-10 h-10 bg-[#fecb00] rounded-full flex items-center justify-center z-10 text-[#1a3a69]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        </div>
+                        <div class="guide-card bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border-l-4 border-[#fecb00] w-full">
+                            <div class="p-6 md:p-8">
+                                <h2 class="text-2xl font-bold text-[#1a3a69] mb-4">Amparo de Pensión (Ley 73)</h2>
+                                
+                                <div class="border-b border-slate-200 mb-4">
+                                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                                        <button class="tab-btn active-tab" data-tab-target="#amparo73-desc">Descripción</button>
+                                        <button class="tab-btn" data-tab-target="#amparo73-detail">Detalle</button>
+                                        <button class="tab-btn" data-tab-target="#amparo73-payment">Pago</button>
+                                    </nav>
+                                </div>
+                                <div>
+                                    <div id="amparo73-desc" class="tab-content">
+                                        <p class="text-slate-600 mb-6">Esta resolución se le brinda al cliente que, habiendo elegido el régimen de la Ley 73, cumplió exitosamente con los requisitos como el mínimo de 500 semanas cotizadas. El documento formaliza el derecho a recibir una pensión mensual, calculada en base al salario promedio de sus últimas 250 semanas de cotización.</p>
+                                        <div class="my-6">
+                                            <img src="Amparo 73.jpg" alt="Ejemplo de Amparo 73" class="rounded-lg shadow-md w-full">
+                                        </div>
+                                    </div>
+                                    <div id="amparo73-detail" class="tab-content hidden">
+                                        <img src="Amparo 73 Detalle.jfif" alt="Detalle de Amparo 73" class="rounded-lg shadow-md w-full my-6">
+                                    </div>
+                                    <div id="amparo73-payment" class="tab-content hidden">
+                                        <p class="text-slate-600">Se realiza el pago correspondiente a las subcuentas de Retiro 97 y vivienda 97. En caso de tener saldos en SAR 92 y Vivienda anterior. Los saldos de Cesantía y vejez, Cuota social y Estatal serán transferidos a gobierno federal para el financiamiento de la pensión.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Negativa de pensión 73 -->
+                    <div id="negativa73" class="guide-item flex items-start gap-x-6">
+                        <div class="flex-shrink-0 w-10 h-10 bg-red-500 rounded-full flex items-center justify-center z-10 text-white">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </div>
+                        <div class="guide-card bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border-l-4 border-red-500 w-full">
+                           <div class="p-6 md:p-8">
+                                <h2 class="text-2xl font-bold text-red-700 mb-4">Negativa de Pensión (Ley 73)</h2>
+                                
+                                <div class="border-b border-slate-200 mb-4">
+                                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                                        <button class="tab-btn active-tab" data-tab-target="#negativa73-desc">Descripción</button>
+                                        <button class="tab-btn" data-tab-target="#negativa73-detail">Detalle</button>
+                                        <button class="tab-btn" data-tab-target="#negativa73-payment">Pago</button>
+                                    </nav>
+                                </div>
+                                <div>
+                                    <div id="negativa73-desc" class="tab-content">
+                                        <p class="text-slate-600 mb-6">Este documento se emite cuando un cliente bajo la Ley 73 no cumple con los requisitos necesarios para obtener una pensión, siendo la causa más común no tener el mínimo de 500 semanas cotizadas. La resolución explica los motivos del rechazo y le permite al cliente disponer de los recursos de su AFORE en una sola exhibición.</p>
+                                        <div class="my-6">
+                                            <img src="Negativa 73.jpg" alt="Ejemplo de Negativa 73" class="rounded-lg shadow-md w-full">
+                                        </div>
+                                    </div>
+                                    <div id="negativa73-detail" class="tab-content hidden">
+                                        <img src="Negativa 73 detalle.jfif" alt="Detalle de Negativa 73" class="rounded-lg shadow-md w-full my-6">
+                                    </div>
+                                    <div id="negativa73-payment" class="tab-content hidden">
+                                        <p class="text-slate-600">Al recibir esta resolución, la Afore te entregará la mayoría de tus recursos en un solo pago. Sin embargo, los saldos de las subcuentas SAR 92 y Vivienda 92 se pagarán por separado. Podrás solicitar la devolución de estos fondos específicos hasta que cumplas 65 años, a través de un trámite de retiro por edad.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: Pensión Garantizada 97 -->
+                    <div id="garantizada97" class="guide-item flex items-start gap-x-6">
+                        <div class="flex-shrink-0 w-10 h-10 bg-[#1a3a69] rounded-full flex items-center justify-center z-10 text-white">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+                        </div>
+                        <div class="guide-card bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border-l-4 border-[#1a3a69] w-full">
+                            <div class="p-6 md:p-8">
+                                <h2 class="text-2xl font-bold text-[#1a3a69] mb-4">Pensión Garantizada (Ley 97)</h2>
+                                
+                                <div class="border-b border-slate-200 mb-4">
+                                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                                        <button class="tab-btn active-tab" data-tab-target="#garantizada97-desc">Descripción</button>
+                                        <button class="tab-btn" data-tab-target="#garantizada97-detail">Detalle</button>
+                                        <button class="tab-btn" data-tab-target="#garantizada97-payment">Pago</button>
+                                    </nav>
+                                </div>
+                                <div>
+                                    <div id="garantizada97-desc" class="tab-content">
+                                        <p class="text-slate-600 mb-6">Esta resolución se otorga a clientes de la Ley 97 que han cumplido con las semanas de cotización requeridas, pero cuyo saldo acumulado en la AFORE no es suficiente para financiar una pensión con una aseguradora. En este escenario, el Gobierno Federal interviene para asegurar una pensión mensual mínima garantizada de por vida.</p>
+                                         <div class="my-6">
+                                            <img src="Pensión garantizada.jpg" alt="Ejemplo de Pensión Garantizada" class="rounded-lg shadow-md w-full">
+                                        </div>
+                                    </div>
+                                    <div id="garantizada97-detail" class="tab-content hidden">
+                                         <img src="Pensión garantizada detalle.jfif" alt="Detalle de Pensión Garantizada" class="rounded-lg shadow-md w-full my-6">
+                                    </div>
+                                    <div id="garantizada97-payment" class="tab-content hidden">
+                                        <p class="text-slate-600">En esta modalidad, el pago se divide en dos etapas. Primero, tu Afore administrará tus ahorros para entregártelos en forma de pagos mensuales, en un esquema conocido como 'Retiros Programados', hasta que el saldo de tu cuenta se agote. Una vez que esto suceda, el IMSS comenzará a pagarte directamente tu pensión garantizada de por vida.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 4: Renta Vitalicia -->
+                    <div id="renta97" class="guide-item flex items-start gap-x-6">
+                        <div class="flex-shrink-0 w-10 h-10 bg-[#fecb00] rounded-full flex items-center justify-center z-10 text-[#1a3a69]">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8.433 7.418c.158-.103.346-.195.574-.277a6.013 6.013 0 014.271.122c.183.069.358.15.52.248a3.013 3.013 0 012.231 2.217c.068.192.12.388.158.587a6.013 6.013 0 01-1.22 4.271c-.069.183-.15.358-.248.52a3.013 3.013 0 01-2.217 2.231c-.192.068-.388.12-.587.158a6.013 6.013 0 01-4.271-1.22c-.183-.069-.358-.15-.52-.248a3.013 3.013 0 01-2.231-2.217c-.068-.192-.12-.388-.158-.587a6.013 6.013 0 011.22-4.271zM12 10a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                        </div>
+                        <div class="guide-card bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border-l-4 border-[#fecb00] w-full">
+                           <div class="p-6 md:p-8">
+                                <h2 class="text-2xl font-bold text-[#1a3a69] mb-4">Renta Vitalicia (Ley 97)</h2>
+                                <div class="border-b border-slate-200 mb-4">
+                                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                                        <button class="tab-btn active-tab" data-tab-target="#renta97-desc">Descripción</button>
+                                        <button class="tab-btn" data-tab-target="#renta97-detail">Detalle</button>
+                                        <button class="tab-btn" data-tab-target="#renta97-payment">Pago</button>
+                                    </nav>
+                                </div>
+                                <div>
+                                    <div id="renta97-desc" class="tab-content">
+                                        <p class="text-slate-600 mb-6">Este documento se entrega a los clientes bajo la Ley 97 cuyo ahorro en la AFORE es suficiente para contratar una pensión mensual de por vida con una aseguradora privada. La resolución formaliza la transferencia de los fondos de la AFORE a la aseguradora elegida, la cual se encargará del pago mensual vitalicio al pensionado.</p>
+                                        <div class="my-6">
+                                            <img src="Renta vitalicia.jfif" alt="Ejemplo de Renta Vitalicia" class="rounded-lg shadow-md w-full">
+                                        </div>
+                                    </div>
+                                    <div id="renta97-detail" class="tab-content hidden">
+                                        <img src="Renta vitalicia detalle.jfif" alt="Detalle de Renta Vitalicia" class="rounded-lg shadow-md w-full my-6">
+                                    </div>
+                                    <div id="renta97-payment" class="tab-content hidden">
+                                        <p class="text-slate-600">Para financiar tu pensión, todos tus ahorros de la Afore se transferirán a la aseguradora que elijas. Esta cantidad se conoce como 'Monto Constitutivo'. Si el saldo total de tu cuenta Afore es mayor que este monto, la diferencia, llamada 'excedente', te será entregada en un solo pago por tu Afore mediante un <strong class="text-[#1a3a69] font-semibold">Retiro por excedente al monto constitutivo</strong>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 5: Negativa de Pensión 97 -->
+                     <div id="negativa97" class="guide-item flex items-start gap-x-6">
+                        <div class="flex-shrink-0 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center z-10 text-white">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                        </div>
+                        <div class="guide-card bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border-l-4 border-orange-500 w-full">
+                           <div class="p-6 md:p-8">
+                                <h2 class="text-2xl font-bold text-orange-700 mb-4">Negativa de Pensión (Ley 97)</h2>
+                                <div class="border-b border-slate-200 mb-4">
+                                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                                        <button class="tab-btn active-tab" data-tab-target="#negativa97-desc">Descripción</button>
+                                        <button class="tab-btn" data-tab-target="#negativa97-detail">Detalle</button>
+                                        <button class="tab-btn" data-tab-target="#negativa97-payment">Pago</button>
+                                    </nav>
+                                </div>
+                                <div>
+                                    <div id="negativa97-desc" class="tab-content">
+                                        <p class="text-slate-600 mb-6">Esta resolución se le entrega al cliente de la Ley 97 que no cumple los requisitos para una pensión, típicamente por no alcanzar el mínimo de semanas cotizadas. Este documento le permite al cliente retirar la totalidad de los recursos acumulados en su cuenta AFORE en un solo pago.</p>
+                                        <div class="my-6">
+                                            <img src="Negativa 97.png" alt="Ejemplo de Negativa 97" class="rounded-lg shadow-md w-full">
+                                        </div>
+                                    </div>
+                                    <div id="negativa97-detail" class="tab-content hidden">
+                                        <img src="Negativa 97 detalle.jfif" alt="Detalle de Negativa 97" class="rounded-lg shadow-md w-full my-6">
+                                    </div>
+                                    <div id="negativa97-payment" class="tab-content hidden">
+                                        <p class="text-slate-600">Con una negativa de pensión Ley 97, puedes retirar la totalidad de los recursos de tu cuenta AFORE en una sola exhibición.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 6: RJP -->
+                    <div id="rjp" class="guide-item flex items-start gap-x-6">
+                        <div class="flex-shrink-0 w-10 h-10 bg-[#1a3a69] rounded-full flex items-center justify-center z-10 text-white">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" /></svg>
+                        </div>
+                        <div class="guide-card bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border-l-4 border-[#1a3a69] w-full">
+                            <div class="p-6 md:p-8">
+                                <h2 class="text-2xl font-bold text-[#1a3a69] mb-4">RJP (Régimen de Jubilaciones y Pensiones)</h2>
+                                <div class="border-b border-slate-200 mb-4">
+                                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                                        <button class="tab-btn active-tab" data-tab-target="#rjp-desc">Descripción</button>
+                                        <button class="tab-btn" data-tab-target="#rjp-detail">Detalle</button>
+                                        <button class="tab-btn" data-tab-target="#rjp-payment">Pago</button>
+                                    </nav>
+                                </div>
+                                <div>
+                                    <div id="rjp-desc" class="tab-content">
+                                        <p class="text-slate-600 mb-6">Esta resolución es exclusiva para los trabajadores del IMSS y se otorga con base en los años de servicio estipulados en el Contrato Colectivo de Trabajo. A diferencia de los regímenes generales, este se rige por las reglas internas para los trabajadores del Instituto, y su pensión se calcula según su historial laboral dentro del mismo.</p>
+                                         <div class="my-6">
+                                            <img src="RJP.jpg" alt="Ejemplo de RJP" class="rounded-lg shadow-md w-full">
+                                        </div>
+                                    </div>
+                                    <div id="rjp-detail" class="tab-content hidden">
+                                        <img src="RJP Detalle.jfif" alt="Detalle de RJP" class="rounded-lg shadow-md w-full my-6">
+                                    </div>
+                                    <div id="rjp-payment" class="tab-content hidden">
+                                        <p class="text-slate-600">Los trabajadores bajo RJP también tienen una cuenta AFORE. Al pensionarse, pueden retirar los saldos de SAR 92 y Vivienda 92. El resto de las subcuentas se entregan al IMSS para financiar la pensión.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 7: Preguntas Frecuentes -->
+                    <div id="faq" class="guide-item flex items-start gap-x-6">
+                        <div class="flex-shrink-0 w-10 h-10 bg-sky-500 rounded-full flex items-center justify-center z-10 text-white">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
+                        </div>
+                        <div class="guide-card bg-white rounded-xl shadow-lg hover:shadow-xl overflow-hidden border-l-4 border-sky-500 w-full">
+                            <div class="p-6 md:p-8">
+                                <h2 class="text-2xl font-bold text-sky-800 mb-6">Preguntas Frecuentes</h2>
+                                <div class="space-y-4">
+                                    <!-- FAQ 1 -->
+                                    <div class="border border-slate-200 rounded-lg">
+                                        <button class="faq-question w-full flex justify-between items-center text-left p-4 bg-slate-50 hover:bg-slate-100 rounded-t-lg focus:outline-none">
+                                            <span class="font-semibold text-slate-700">¿Qué son las semanas cotizadas y cómo sé cuántas tengo?</span>
+                                            <svg class="w-5 h-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                                        </button>
+                                        <div class="faq-answer hidden p-4 border-t border-slate-200">
+                                            <p class="text-slate-600">Son los periodos en los que tú o tu patrón pagaron cuotas al IMSS. Cada semana de pago se cuenta. Puedes consultar tu número exacto de semanas cotizadas solicitando una "Constancia de Semanas Cotizadas" en el portal de servicios digitales del IMSS con tu NSS y CURP.</p>
+                                        </div>
+                                    </div>
+                                    <!-- FAQ 2 -->
+                                    <div class="border border-slate-200 rounded-lg">
+                                        <button class="faq-question w-full flex justify-between items-center text-left p-4 bg-slate-50 hover:bg-slate-100 rounded-t-lg focus:outline-none">
+                                            <span class="font-semibold text-slate-700">¿Qué pasa con el dinero de mi Afore si fallezco?</span>
+                                            <svg class="w-5 h-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                                        </button>
+                                        <div class="faq-answer hidden p-4 border-t border-slate-200">
+                                            <p class="text-slate-600">Los recursos de tu cuenta Afore no se pierden. Se entregan a tus beneficiarios. Es muy importante que designes beneficiarios legales (esposa/o, hijos, padres) y, si no los tienes, puedes designar beneficiarios sustitutos en tu Afore.</p>
+                                        </div>
+                                    </div>
+                                    <!-- FAQ 3 -->
+                                    <div class="border border-slate-200 rounded-lg">
+                                        <button class="faq-question w-full flex justify-between items-center text-left p-4 bg-slate-50 hover:bg-slate-100 rounded-t-lg focus:outline-none">
+                                            <span class="font-semibold text-slate-700">¿Puedo mejorar mi pensión con aportaciones voluntarias?</span>
+                                            <svg class="w-5 h-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                                        </button>
+                                        <div class="faq-answer hidden p-4 border-t border-slate-200">
+                                            <p class="text-slate-600">¡Sí! El ahorro voluntario es una excelente herramienta. Cualquier cantidad que deposites adicionalmente en tu cuenta Afore incrementará el saldo total, lo que puede resultar en una mejor pensión o un excedente mayor al momento de tu retiro. Además, puede tener beneficios fiscales.</p>
+                                        </div>
+                                    </div>
+                                    <!-- FAQ 4 -->
+                                    <div class="border border-slate-200 rounded-lg">
+                                        <button class="faq-question w-full flex justify-between items-center text-left p-4 bg-slate-50 hover:bg-slate-100 rounded-t-lg focus:outline-none">
+                                            <span class="font-semibold text-slate-700">¿Qué es la Modalidad 40 y para qué sirve?</span>
+                                            <svg class="w-5 h-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                                        </button>
+                                        <div class="faq-answer hidden p-4 border-t border-slate-200">
+                                            <p class="text-slate-600">La "Continuación Voluntaria en el Régimen Obligatorio" o Modalidad 40, es una opción para trabajadores bajo la Ley 73 que dejaron de cotizar. Les permite seguir haciendo aportaciones por su cuenta para sumar semanas y, sobre todo, mejorar el promedio salarial de los últimos 5 años, lo cual puede incrementar significativamente el monto de la pensión.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 pt-10 border-t border-slate-200 text-center text-slate-500">
+            <img src="afore 2.png" alt="Logo Afore Coppel" class="h-10 mx-auto mb-4">
+            <p class="font-semibold text-slate-700 text-lg">Afore Coppel</p>
+            <p class="text-sm">Para dudas o aclaraciones, contáctanos.</p>
+            <div class="flex justify-center gap-6 my-5">
+                <a href="#" class="text-slate-400 hover:text-[#1a3a69] transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                <a href="#" class="text-slate-400 hover:text-[#1a3a69] transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg></a>
+                <a href="#" class="text-slate-400 hover:text-[#1a3a69] transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.345 2.525c.636-.247 1.363-.416 2.427-.465C9.793 2.013 10.147 2 12.315 2zm-1.163 1.943c-1.044-.048-1.706-.214-2.25-.42a3.003 3.003 0 00-1.096.657 3.003 3.003 0 00-.656 1.096c-.207.545-.373 1.206-.42 2.25-.045 1.025-.058 1.35-.058 3.443s.013 2.418.058 3.443c.047.962.213 1.632.42 2.176a3.003 3.003 0 00.656 1.096 3.003 3.003 0 001.096.657c.545.206 1.206.372 2.25.42 1.025.045 1.35.058 3.443.058s2.418-.013 3.443-.058c.962-.047 1.632-.213 2.176-.42a3.003 3.003 0 001.096-.657 3.003 3.003 0 00.657-1.096c.206-.545.372-1.206.42-2.176.045-1.025.058-1.35.058-3.443s-.013-2.418-.058-3.443c-.048-1.044-.214-1.706-.42-2.25a3.003 3.003 0 00-.657-1.096 3.003 3.003 0 00-1.096-.657c-.545-.207-1.206-.373-2.176-.42-1.025-.045-1.35-.058-3.443-.058zM12 6.865a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zm0 1.943a3.192 3.192 0 110 6.384 3.192 3.192 0 010-6.384zm3.623-3.21a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z" clip-rule="evenodd" /></svg></a>
+            </div>
+            <p class="text-xs">&copy; 2025 Afore Coppel, S.A. de C.V. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <!-- Scroll to top button -->
+    <button id="scrollToTopBtn" title="Ir al inicio"
+        class="hidden fixed bottom-5 right-5 bg-[#1a3a69] hover:bg-[#152c4f] text-white p-3 rounded-full shadow-lg transition-all duration-300 z-30">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 11l7-7 7 7M5 19l7-7 7 7" />
+        </svg>
+    </button>
+    
+    <!-- Image Zoom Modal -->
+    <div id="imageModal" class="modal-overlay">
+        <button id="modalClose" class="modal-close">&times;</button>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Imagen ampliada" class="modal-image">
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Logic for the "scroll to top" button
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            window.onscroll = function() {
+                if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                    scrollToTopBtn.classList.remove('hidden');
+                } else {
+                    scrollToTopBtn.classList.add('hidden');
+                }
+            };
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Logic for the active nav link with Intersection Observer
+            const sections = document.querySelectorAll('main > div > div[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-40% 0px -60% 0px" });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Logic for the tabs inside each card
+            const guideCards = document.querySelectorAll('.guide-card');
+            guideCards.forEach(card => {
+                const tabs = card.querySelectorAll('.tab-btn');
+                const contents = card.querySelectorAll('.tab-content');
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(item => item.classList.remove('active-tab'));
+                        tab.classList.add('active-tab');
+                        
+                        contents.forEach(content => content.classList.add('hidden'));
+                        const targetSelector = tab.dataset.tabTarget;
+                        const target = card.querySelector(targetSelector);
+                        if(target) {
+                            target.classList.remove('hidden');
+                        }
+                    });
+                });
+            });
+
+            // Logic for FAQ Accordion
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const icon = question.querySelector('svg');
+                    const isHidden = answer.classList.contains('hidden');
+                    if(isHidden) {
+                        answer.classList.remove('hidden');
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        answer.classList.add('hidden');
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // --- Logic for Image Zoom and Pan ---
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const modalClose = document.getElementById('modalClose');
+
+            // Add class to all images that should be zoomable
+            document.querySelectorAll('.my-6 > img').forEach(img => {
+                img.classList.add('zoomable-image', 'cursor-zoom-in');
+            });
+
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY;
+            let translateX = 0, translateY = 0;
+
+            function updateImageTransform() {
+                modalImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            }
+
+            function resetModalState() {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                // Set initial size before applying transform to avoid glitches
+                modalImg.style.width = 'auto';
+                modalImg.style.height = 'auto';
+                const container = document.querySelector('.modal-content');
+                const containerRatio = container.offsetWidth / container.offsetHeight;
+                const imgRatio = modalImg.naturalWidth / modalImg.naturalHeight;
+                if(imgRatio > containerRatio){
+                    modalImg.style.width = '100%';
+                } else {
+                    modalImg.style.height = '100%';
+                }
+                updateImageTransform();
+            }
+            
+            document.querySelectorAll('.zoomable-image').forEach(image => {
+                image.addEventListener('click', () => {
+                    modalImg.src = image.src;
+                    modal.classList.add('visible');
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Reset state when a new image is opened
+                    modalImg.onload = () => { // Ensure image is loaded before resetting
+                       resetModalState();
+                    }
+                });
+            });
+
+            function closeModal() {
+                modal.classList.remove('visible');
+                document.body.style.overflow = '';
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            modalImg.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDragging = true;
+                startX = e.pageX - translateX;
+                startY = e.pageY - translateY;
+                modalImg.classList.add('dragging');
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                translateX = e.pageX - startX;
+                translateY = e.pageY - startY;
+                updateImageTransform();
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                modalImg.classList.remove('dragging');
+            });
+
+            modal.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const scaleAmount = 0.1;
+                const rect = modalImg.getBoundingClientRect();
+                // Determine mouse position relative to image
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                // Calculate the change in scale
+                const delta = e.deltaY > 0 ? -scaleAmount : scaleAmount;
+                const newScale = Math.max(0.5, scale + delta); // Prevent zooming out too much
+                
+                // Adjust translation to zoom towards the mouse pointer
+                translateX = translateX - (mouseX / scale - mouseX / newScale) * newScale;
+                translateY = translateY - (mouseY / scale - mouseY / newScale) * newScale;
+
+                scale = newScale;
+                updateImageTransform();
+            });
+        });
+    </script>
+
+</body>
+</html>
+
